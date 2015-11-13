@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 require 'args_parser'
-require 'highline/import'
+require 'highline'
 require 'octokit'
 require 'time'
 
@@ -93,9 +93,10 @@ repos.sort!{|a,b|
   b.updated_at <=> a.updated_at
 }
 
+h = HighLine.new
 repos.each_with_index do |repo, i|
-  puts "[#{i+1}/#{repos.size}] https://github.com/#{repo.full_name} (#{repo.open_issues_count} issues) [#{repo.updated_at}]"
+  puts h.color("[#{i+1}/#{repos.size}] https://github.com/#{repo.full_name} (#{repo.open_issues_count} issues) [#{repo.updated_at}]", :white)
   client.issues(repo.full_name).each do |i|
-    puts " - ##{i.number}\t#{i.title}"
+    puts " - " + h.color("##{i.number}", :green)  + "\t#{i.title}"
   end
 end
